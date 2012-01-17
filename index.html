@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link href="styles/counter.css" type="text/css" rel="stylesheet" />
+        <link href="styles/sample.css" type="text/css" rel="stylesheet" />
+
+        <script language="javascript" src="scripts/jquery-1.7.1.min.js"></script>
+        <script language="javascript" src="scripts/counter.js"></script>
+
+				<script>
+				function spin() {
+					var value = $('#value').val();
+					var time = $('#time').val();
+					counter('#counterdiv').spin(value, time);
+				}
+				</script>
+    </head>
+
+    <body>
+		    <table>
+            <tr>
+                <td><span>Animation Time (ms)</span></td>
+                <td><input type="text" id="time" value="1000"/></td>
+						</tr>
+					  <tr>
+               <td><span>Dial Value</span></td>
+               <td><input type="text" id="value" value="1000"/></td>
+						</tr>
+				    <tr>
+            <td><input type="button" value="Spin Number" onclick="javascript:spin();return true;"/></td>
+						</tr>
+				</table>
+        <div id="counterdiv"> </div>
+    </body>
+</html>
