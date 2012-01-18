@@ -1,12 +1,22 @@
 .counterFrame {
-/*
     overflow:hidden;
+    float:left;
     border-style: solid;
     border-width: 1px;
-*/
 }
 
 .counterRibbon {
     position:relative;
     float:left;
+		text-align: center;
+}
+
+.vertCenter {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.horizFill {
+	float:left;
+	margin: auto;
 }

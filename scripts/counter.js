@@ -1,13 +1,20 @@
 
 function counter(selector) {
+	var charStyle = '';
 
 	return {
-		spin : function(value, time) { spinCounter(value,time); return this; }
+		spin : function(value, time) { spinCounter(value,time); return this; },
+		style : function(style) { charStyle = style; return this; }
 	}
 
 	function spinCounter(value,time) {
+			createFrame();
 			createRibbonSlots(value.length);
 			createRibbons();
+	}
+
+	function createFrame() {
+		$(selector).append('<div style="float:left;" id="leftFiller"></div><div class="counterFrame" id="frame"></div><div class="horizFill" id="rightFiller"></div>');
 	}
 
 	function createRibbonSlots(newWidth) {
@@ -20,14 +27,21 @@ function counter(selector) {
 			$(selector + ' .counterRibbon:gt(' + ltdig + ')').remove();
 		} else {
 
-			for(i=0;i<widthDiff;i++) {
-				$(selector).append('<div class="counterRibbon" id="rib' + (currWidth+i) + '"></div>');
+			for(var i=0;i<widthDiff;i++) {
+				$(selector+' .counterFrame').append('<div class="counterRibbon" id="rib' + (currWidth+i) + '"></div>');
 			}
 		}
-
-		$(selector).addClass('counterFrame');
 	}
 
 	function createRibbons() {
+
+		$(selector + ' .counterRibbon').each( function() {
+			for(var i=0;i<5;i++) {
+				$(this).append('<div><div class="' + charStyle + ' counter vertCenter" id="char' + i + '"></div></div>');
+			}
+
+			var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
+			$(selector+' .counterFrame').css('height', charHeight);
+		});
 	}
 }
