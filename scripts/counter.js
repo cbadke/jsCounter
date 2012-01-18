@@ -1,20 +1,27 @@
 
 function counter(selector) {
-	var charStyle = '';
+	var charStyle = 'defaultStyle';
+
+	createFrame();
 
 	return {
 		spin : function(value, time) { spinCounter(value,time); return this; },
-		style : function(style) { charStyle = style; return this; }
+		style : function(style) { charStyle = style; return this; },
+		center : function() { 
+			$(selector + ' .counterFrame').css('margin-left','auto').css('margin-right','auto'); 
+			$(selector).css('text-align','center');
+			return this; }
 	}
 
 	function spinCounter(value,time) {
-			createFrame();
-			createRibbonSlots(value.length);
-			createRibbons();
+		createRibbonSlots(value.length);
+		createRibbons();
 	}
 
 	function createFrame() {
-		$(selector).append('<div style="float:left;" id="leftFiller"></div><div class="counterFrame" id="frame"></div><div class="horizFill" id="rightFiller"></div>');
+		if ($(selector + ' .counterFrame').size() == 0) {
+			$(selector).append('<div class="counterFrame" style="display: inline-block" id="frame"></div>');
+		}
 	}
 
 	function createRibbonSlots(newWidth) {
@@ -31,17 +38,20 @@ function counter(selector) {
 				$(selector+' .counterFrame').append('<div class="counterRibbon" id="rib' + (currWidth+i) + '"></div>');
 			}
 		}
+
 	}
 
 	function createRibbons() {
 
 		$(selector + ' .counterRibbon').each( function() {
-			for(var i=0;i<5;i++) {
-				$(this).append('<div><div class="' + charStyle + ' counter vertCenter" id="char' + i + '"></div></div>');
+			currHeight = $('#' + this.id + ' .counter').size();
+			for(var i=currHeight;i<5;i++) {
+				$(this).append('<div><div class="' + charStyle + ' counter vertCenter" id="char' + i + '">'+i+'</div></div>');
 			}
 
-			var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
-			$(selector+' .counterFrame').css('height', charHeight);
 		});
+
+		var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
+		$(selector+' .counterFrame').css('height', charHeight);
 	}
 }
