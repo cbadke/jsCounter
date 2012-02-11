@@ -15,7 +15,31 @@ function counter(selector) {
 
 	function spinCounter(value,time) {
 		createRibbonSlots(value.length);
-		createRibbons();
+
+		for (i=value.length;i>=0; i--) {
+			var onum=value.charAt(i);
+			$('#'+selector.substring(1)+'_rib'+i).attr('value',onum);
+			$('#'+selector.substring(1)+'_rib'+i+'_char1').html(onum);
+		}
+
+		var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
+		var borderHeight = Number($('.'+charStyle).filter(':first').css('border-width').replace(/[^-\d\.]/g, ''));
+		charHeight += borderHeight*2;
+
+		$(selector + ' .counterRibbon').each( function() {
+			$(this).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
+		});
+
+		for (i=value.length;i>=0; i--) {
+			var onum=value.charAt(i);
+			$(this).queue( function(){ $('#'+selector.substring(1)+'_rib'+i).attr('value',onum); $(this).dequeue(); });
+			$(this).queue( function(){ $('#'+selector.substring(1)+'_rib'+i+'_char0').html(onum); $(this).dequeue(); });
+		}
+		
+		$(selector + ' .counterRibbon').each( function() {
+			$(this).animate( { top: '0px'}, 0, 'linear' );
+		});
+
 	}
 
 	function createFrame() {
@@ -35,23 +59,28 @@ function counter(selector) {
 		} else {
 
 			for(var i=0;i<widthDiff;i++) {
-				$(selector+' .counterFrame').append('<div class="counterRibbon" id="rib' + (currWidth+i) + '"></div>');
+				$(selector+' .counterFrame').append('<div class="counterRibbon" value=" " id="'+selector.substring(1)+'_rib' + (currWidth+i) + '"></div>');
 			}
 		}
 
+		createRibbons();
 	}
 
 	function createRibbons() {
 
+		var j = 0;
 		$(selector + ' .counterRibbon').each( function() {
 			currHeight = $('#' + this.id + ' .counter').size();
 			for(var i=currHeight;i<5;i++) {
-				$(this).append('<div><div class="' + charStyle + ' counter vertCenter" id="char' + i + '">'+i+'</div></div>');
+				$(this).append('<div><div class="' + charStyle + ' counter vertCenter" id="'+selector.substring(1)+'_rib'+j+'_char' + i + '"></div></div>');
 			}
 
+			j++;
 		});
 
 		var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
+		var borderHeight = Number($('.'+charStyle).filter(':first').css('border-width').replace(/[^-\d\.]/g, ''));
+		charHeight += borderHeight*2;
 		$(selector+' .counterFrame').css('height', charHeight);
 	}
 }
