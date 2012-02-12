@@ -21,16 +21,18 @@ function counter(selector) {
 		charHeight += borderHeight*2;
 
 		for (i=value.length-1;i>=0; i--) {
-			var onum=value.charAt(i);
+			var newChar=value.charAt(i);
 			var ribbonName = '#'+selector.substring(1)+'_rib'+i;
-			$(ribbonName).attr('value',onum);
-			$(ribbonName+'_char1').html(onum);
-			$(ribbonName).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
-			$(ribbonName).queue( function(id, value){ return function(){ 
-				$(id).html(value); 
-			 	$(this).dequeue(); 
-				}}(ribbonName+'_char0', onum));
-			$(ribbonName).animate( { top: '0px'}, 0, 'linear' );
+
+			if (newChar != $(ribbonName+'_char0').html()) {
+				$(ribbonName+'_char1').html(newChar);
+				$(ribbonName).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
+				$(ribbonName).queue( function(id, value){ return function(){ 
+					$(id).html(value); 
+					$(this).dequeue(); 
+					}}(ribbonName+'_char0', newChar));
+				$(ribbonName).animate( { top: '0px'}, 0, 'linear' );
+			}
 		}
 	}
 
