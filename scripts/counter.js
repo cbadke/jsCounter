@@ -14,26 +14,30 @@ function counter(selector) {
 	}
 
 	function spinCounter(value,time) {
-		createRibbonSlots(value.length);
-
-		var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
-		var borderHeight = Number($('.'+charStyle).filter(':first').css('border-width').replace(/[^-\d\.]/g, ''));
-		charHeight += borderHeight*2;
+		ensureRibbonSlots(value.length);
 
 		for (i=value.length-1;i>=0; i--) {
-			var newChar=value.charAt(i);
-			var ribbonName = '#'+selector.substring(1)+'_rib'+i;
+			spinRibbon( i, value.charAt(i), time);
+		}
+	}
 
-			if (newChar != $(ribbonName+'_char0').html()) {
-				$(ribbonName+'_char1').html(newChar);
+	function spinRibbon(ribbonNum, character, time) {
+			var ribbonName = '#'+selector.substring(1)+'_rib'+ribbonNum;
+
+			if (character != $(ribbonName+'_char0').html()) {
+
+				var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
+				var borderHeight = Number($('.'+charStyle).filter(':first').css('border-width').replace(/[^-\d\.]/g, ''));
+				charHeight += borderHeight*2;
+
+				$(ribbonName+'_char1').html(character);
 				$(ribbonName).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
 				$(ribbonName).queue( function(id, value){ return function(){ 
 					$(id).html(value); 
 					$(this).dequeue(); 
-					}}(ribbonName+'_char0', newChar));
+					}}(ribbonName+'_char0', character));
 				$(ribbonName).animate( { top: '0px'}, 0, 'linear' );
 			}
-		}
 	}
 
 	function createFrame() {
@@ -42,7 +46,7 @@ function counter(selector) {
 		}
 	}
 
-	function createRibbonSlots(newWidth) {
+	function ensureRibbonSlots(newWidth) {
 		newWidth = Number(newWidth);
 		var currWidth = $(selector + ' .counterRibbon').size();
 		var widthDiff = newWidth - currWidth;
