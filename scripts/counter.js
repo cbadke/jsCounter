@@ -16,30 +16,22 @@ function counter(selector) {
 	function spinCounter(value,time) {
 		createRibbonSlots(value.length);
 
-		for (i=value.length;i>=0; i--) {
-			var onum=value.charAt(i);
-			$('#'+selector.substring(1)+'_rib'+i).attr('value',onum);
-			$('#'+selector.substring(1)+'_rib'+i+'_char1').html(onum);
-		}
-
 		var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
 		var borderHeight = Number($('.'+charStyle).filter(':first').css('border-width').replace(/[^-\d\.]/g, ''));
 		charHeight += borderHeight*2;
 
-		$(selector + ' .counterRibbon').each( function() {
-			$(this).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
-		});
-
-		for (i=value.length;i>=0; i--) {
+		for (i=value.length-1;i>=0; i--) {
 			var onum=value.charAt(i);
-			$(this).queue( function(){ $('#'+selector.substring(1)+'_rib'+i).attr('value',onum); $(this).dequeue(); });
-			$(this).queue( function(){ $('#'+selector.substring(1)+'_rib'+i+'_char0').html(onum); $(this).dequeue(); });
+			var ribbonName = '#'+selector.substring(1)+'_rib'+i;
+			$(ribbonName).attr('value',onum);
+			$(ribbonName+'_char1').html(onum);
+			$(ribbonName).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
+			$(ribbonName).queue( function(id, value){ return function(){ 
+				$(id).html(value); 
+			 	$(this).dequeue(); 
+				}}(ribbonName+'_char0', onum));
+			$(ribbonName).animate( { top: '0px'}, 0, 'linear' );
 		}
-		
-		$(selector + ' .counterRibbon').each( function() {
-			$(this).animate( { top: '0px'}, 0, 'linear' );
-		});
-
 	}
 
 	function createFrame() {
