@@ -22,22 +22,59 @@ function counter(selector) {
 	}
 
 	function spinRibbon(ribbonNum, character, time) {
-			var ribbonName = '#'+selector.substring(1)+'_rib'+ribbonNum;
+		var ribbonName = '#'+selector.substring(1)+'_rib'+ribbonNum;
 
-			if (character != $(ribbonName+'_char0').html()) {
-
-				var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
-				var borderHeight = Number($('.'+charStyle).filter(':first').css('border-width').replace(/[^-\d\.]/g, ''));
-				charHeight += borderHeight*2;
-
-				$(ribbonName+'_char1').html(character);
-				$(ribbonName).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
-				$(ribbonName).queue( function(id, value){ return function(){ 
-					$(id).html(value); 
-					$(this).dequeue(); 
-					}}(ribbonName+'_char0', character));
-				$(ribbonName).animate( { top: '0px'}, 0, 'linear' );
+		if (character != $(ribbonName+'_char0').html()) {
+			var sequence = generateSequence($(ribbonName+'_char0').html().charAt(0), character);
+			for (var i = 0; i < sequence.length; i++) {
+				changeChar(ribbonName, sequence.charAt(i), time);
 			}
+		}
+	}
+
+	function generateSequence(startChar, endChar) {
+		var sequence = '';
+		var digits = '0123456789';
+		var lower = 'abcdefghijklmnopqrstuvwxyz';
+		var upper = lower.toUpperCase();
+
+		var endIsNum = digits.indexOf(endChar) != -1;
+		var endIsLower = lower.indexOf(endChar) != -1;
+		var endIsUpper = upper.indexOf(endChar) != -1;
+
+		if (startChar == '') {
+			startChar = ' ';
+		}
+
+		if (digits.indexOf(startChar) != -1) {
+				sequence = digits.substr(digits.indexOf(startChar)+1);
+		}
+
+		if (endIsNum) {
+			sequence = sequence.concat(digits);
+			sequence = sequence.substr(0, sequence.indexOf(endChar) + 1);
+		} else {
+			sequence += endChar;
+		}
+
+		return sequence;
+	}
+
+	function changeChar(ribbonName, character, time) {
+		var charHeight = Number($('.'+charStyle).filter(':first').css('height').replace(/[^-\d\.]/g, ''));
+		var borderHeight = Number($('.'+charStyle).filter(':first').css('border-width').replace(/[^-\d\.]/g, ''));
+		charHeight += borderHeight*2;
+
+		$(ribbonName).queue( function(id, value){ return function(){ 
+				$(id).html(value); 
+				$(this).dequeue(); 
+				}}(ribbonName+'_char1', character));
+		$(ribbonName).animate( { top: '-'+charHeight+'px'}, time, 'linear' );
+		$(ribbonName).queue( function(id, value){ return function(){ 
+				$(id).html(value); 
+				$(this).dequeue(); 
+				}}(ribbonName+'_char0', character));
+		$(ribbonName).animate( { top: '0px'}, 0 );
 	}
 
 	function createFrame() {
