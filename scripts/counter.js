@@ -26,8 +26,9 @@ function counter(selector) {
 
 		if (character != $(ribbonName+'_char0').html()) {
 			var sequence = generateSequence($(ribbonName+'_char0').html().charAt(0), character);
+			var timePerChar = time / sequence.length;
 			for (var i = 0; i < sequence.length; i++) {
-				changeChar(ribbonName, sequence.charAt(i), time);
+				changeChar(ribbonName, sequence.charAt(i), timePerChar);
 			}
 		}
 	}
