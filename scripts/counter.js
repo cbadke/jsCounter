@@ -38,24 +38,26 @@ function counter(selector) {
 		var lower = 'abcdefghijklmnopqrstuvwxyz';
 		var upper = lower.toUpperCase();
 
-		var endIsNum = digits.indexOf(endChar) != -1;
-		var endIsLower = lower.indexOf(endChar) != -1;
-		var endIsUpper = upper.indexOf(endChar) != -1;
-
 		if (startChar == '') {
 			startChar = ' ';
 		}
 
 		if (digits.indexOf(startChar) != -1) {
-				sequence = digits.substr(digits.indexOf(startChar)+1);
+			sequence = digits.substr(digits.indexOf(startChar)+1);
+		} else if (lower.indexOf(startChar) != -1) {
+			sequence = lower.substr(lower.indexOf(startChar)+1);
+		} else if (upper.indexOf(startChar) != -1) {
+			sequence = upper.substr(upper.indexOf(startChar)+1);
 		}
 
-		if (endIsNum) {
+		if (digits.indexOf(endChar) != -1) {
 			sequence = sequence.concat(digits);
-			sequence = sequence.substr(0, sequence.indexOf(endChar) + 1);
-		} else {
-			sequence += endChar;
+		} else if (lower.indexOf(endChar) != -1) {
+			sequence = sequence.concat(lower);
+		} else if (upper.indexOf(endChar) != -1) {
+			sequence = sequence.concat(upper);
 		}
+		sequence = sequence.substr(0, sequence.indexOf(endChar)) + endChar;
 
 		return sequence;
 	}
